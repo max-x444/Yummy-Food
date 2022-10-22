@@ -1,0 +1,313 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <title>YummyFood</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/category.css">
+</head>
+
+<body>
+
+<div id="menu" th:insert="home :: menu_fragment"></div>
+
+<div class="container-xl">
+    <div class="table-responsive">
+        <div class="table-wrapper">
+            <div class="table-title">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h2>Manage <b>Categories</b></h2>
+                    </div>
+                    <div class="col-sm-6">
+                        <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
+                            <i class="material-icons">&#xE147;</i> <span>Add New Category</span></a>
+                        <a href="#deleteEmployeeModal" class="btn btn-danger" data-toggle="modal">
+                            <i class="material-icons">&#xE15C;</i> <span>Delete</span></a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4 mt-3">
+                        <form id="form" th:action="@{/api/dish-category/get-all/admin(size=${5}, page=${1})}"
+                              th:method="get">
+                            <label style="width: 100%">
+                                Show
+                                <select onchange="checkOption(this)" name="size" aria-controls="example"
+                                        class="form-select form-select-sm">
+                                    <option th:selected="${tPage.size == 5}" value="5">5</option>
+                                    <option th:selected="${tPage.size == 10}" value="10">10</option>
+                                    <option th:selected="${tPage.size == 15}" value="15">15</option>
+                                </select>
+                                entries
+                            </label>
+                            <button hidden id="submit" type="submit"></button>
+                        </form>
+                    </div>
+                    <div class="col-sm-4 mt-3">
+                    </div>
+                    <div class="col-sm-4 mt-3">
+                        <label style="width: 100%">Search:
+                            <input id="search" onkeyup="filterTable()" type="search"
+                                   class="form-control form-control-sm" placeholder=""
+                                   aria-controls="example">
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <table id="table" class="table table-striped table-hover">
+                <thead>
+                <tr>
+                    <th>
+                        <span class="custom-checkbox">
+                            <input type="checkbox" id="selectAll">
+                            <label for="selectAll"></label>
+                        </span>
+                    </th>
+                    <th>ID</th>
+                    <th>IMAGE</th>
+                    <th>NAME</th>
+                    <th style="text-align:center; width: 150px">ACTIONS</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="dishCategory: ${tPage.content}">
+                    <td>
+                        <span class="custom-checkbox">
+                            <input type="checkbox" id="checkbox1" name="options[]" value="1">
+                            <label for="checkbox1"></label>
+                        </span>
+                    </td>
+                    <td th:text="${dishCategory.id}"></td>
+                    <td th:text="${dishCategory.image}"></td>
+                    <td th:text="${dishCategory.name}"></td>
+                    <td style="width: 150px">
+                        <a class="btn edit" onclick="setValue(this)" data-bs-toggle="modal"
+                           data-bs-target="#editCategoryModal">
+                            <i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i>
+                        </a>
+                        <a class="btn delete" onclick="setDeleteId(this)" data-bs-toggle="modal"
+                           data-bs-target="#deleteCategoryModal">
+                            <i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <th></th>
+                    <th>ID</th>
+                    <th>IMAGE</th>
+                    <th>NAME</th>
+                    <th style="text-align:center; width: 150px">ACTIONS</th>
+                </tr>
+                </tfoot>
+            </table>
+            <div class="clearfix">
+                <div class="hint-text">
+                    Showing
+                    <b th:text="${tPage.size * (currentPage - 1) + 1}"></b>
+                    to
+                    <b th:if="${currentPage == tPage.totalPages}"
+                       th:text="${tPage.size * currentPage -
+                           (currentPage * tPage.size - tPage.totalElements)}">
+                    </b>
+                    <b th:if="${currentPage != tPage.totalPages}"
+                       th:text="${tPage.size * currentPage}">
+                    </b>
+                    of
+                    <b th:text="${tPage.totalElements}"></b> entries
+                </div>
+                <div class="pagination">
+                    <li class="page-item">
+                        <a th:if="${currentPage > 1}"
+                           th:href="@{/api/dish-category/get-all/admin(size=${tPage.size}, page=${currentPage - 1})}"
+                           class="page-link">Previous</a>
+                        <a th:if="${currentPage == 1}"
+                           class="page-link">Previous</a>
+                    </li>
+                    <li class="page-item" th:if="${tPage.totalPages > 0}"
+                        th:each="pageNumber : ${pageNumbers}"
+                        th:class="${pageNumber==tPage.number + 1} ? active">
+                        <a th:href="@{/api/dish-category/get-all/admin(size=${tPage.size}, page=${pageNumber})}"
+                           th:text="${pageNumber}" class="page-link">
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a th:if="${currentPage != tPage.totalPages}"
+                           th:href="@{/api/dish-category/get-all/admin(size=${tPage.size}, page=${currentPage + 1})}"
+                           class="page-link">Next</a>
+                        <a th:if="${currentPage == tPage.totalPages}"
+                           class="page-link">Next</a>
+                    </li>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Modal HTML -->
+<div id="addCategoryModal" class="modal fade" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form th:action="@{/api/dish-category/create}" th:method="post" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h4 class="modal-title">Add Category</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Image</label>
+                        <input type="file" name="file" class="form-control-file">
+                    </div>
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" name="name" class="form-control" required>
+                    </div>
+                    <div hidden>
+                        <input id="addSize" type="number" name="size">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
+                    <input onclick="setSizePage('addSize')" type="submit" class="btn btn-success" value="Add">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Edit Modal HTML -->
+<div id="editCategoryModal" class="modal fade" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form th:action="@{/api/dish-category/update}" th:method="put" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit Category</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Image</label>
+                        <input type="file" name="file" class="form-control-file">
+                    </div>
+                    <div class="form-group" hidden>
+                        <label>Id</label>
+                        <input id="id" type="text" name="id" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input id="name" type="text" name="name" class="form-control" required>
+                    </div>
+                    <div hidden>
+                        <input id="image" name="image">
+                        <input id="updateSize" type="number" name="size">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-info" value="Save">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Delete Modal HTML -->
+<div id="deleteCategoryModal" class="modal fade" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form th:action="@{/api/dish-category/delete}" th:method="delete">
+                <div class="modal-header">
+                    <h4 class="modal-title">Delete Employee</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete these Records?</p>
+                    <p class="text-warning"><small>This action cannot be undone.</small></p>
+                    <div hidden>
+                        <input id="deleteId" name="id">
+                        <input id="deleteSize" type="number" name="size">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-danger" value="Delete">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function checkOption(option) {
+        const form = document.getElementById('form');
+        const submit = document.getElementById('submit');
+        let action = form.getAttribute('action');
+        action = action.replace('5', option.getAttribute('value'));
+        form.setAttribute('action', action);
+        submit.click();
+    }
+
+    function setValue(editButton) {
+        const modalId = document.getElementById("id");
+        const modalName = document.getElementById("name");
+        const modalImage = document.getElementById("image");
+        const tBody = editButton.parentNode.parentNode;
+        let id = tBody.childNodes[3].textContent;
+        let image = tBody.childNodes[5].textContent;
+        let name = tBody.childNodes[7].textContent;
+        modalId.setAttribute('value', id);
+        modalName.setAttribute('value', name);
+        modalImage.setAttribute('value', image);
+        setSizePage('updateSize')
+    }
+
+    function setDeleteId(deleteButton) {
+        const tBody = deleteButton.parentNode.parentNode;
+        const modalId = document.getElementById("deleteId");
+        let id = tBody.childNodes[3].textContent;
+        modalId.setAttribute('value', id);
+        setSizePage('deleteSize')
+    }
+
+    function setSizePage(idSize) {
+        const form = document.getElementById('form');
+        const select = form.children[0].children[0];
+        let size = document.getElementById(idSize)
+        for (let i = 0; i < 3; i++) {
+            if (select.children[i].getAttribute("selected")) {
+                size.setAttribute('value', select.children[i].getAttribute("value"))
+                console.log(size.getAttribute('value'));
+            }
+        }
+    }
+
+    function filterTable() {
+        const search = document.getElementById('search');
+        const table = document.getElementById('table');
+        const tBody = table.getElementsByTagName('tbody');
+        let filter = search.value.toUpperCase();
+        let txtValue;
+        for (let tr of tBody[0].getElementsByTagName('tr')) {
+            tr.style.display = "none";
+            for (let td of tr.getElementsByTagName('td')) {
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr.style.display = "";
+                    }
+                }
+            }
+        }
+    }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+        crossorigin="anonymous"></script>
+</body>
+</html>

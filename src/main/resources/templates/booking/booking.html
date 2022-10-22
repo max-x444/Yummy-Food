@@ -1,0 +1,68 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <title>YummyFood</title>
+</head>
+
+<body>
+
+<div id="menu" th:insert="home :: menu_fragment"></div>
+
+<div class="breadcrumb-content text-center mt-lg-5">
+    <h1 style="font-family: serif">Orders</h1>
+</div>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col" style="width: 200px"></th>
+                        <th scope="col" style="text-align:center; width: 200px">ID</th>
+                        <th scope="col" style="text-align:center; width: 200px">CREATED</th>
+                        <th scope="col" style="text-align:center; width: 200px">DISHES PREPARATION</th>
+                        <th scope="col" style="text-align:center; width: 150px">DISH</th>
+                        <th scope="col" style="text-align:center; width: 150px">STATUS</th>
+                        <th scope="col" style="text-align:center; width: 150px">TOTAL PRICE</th>
+                        <th scope="col" style="text-align:center; width: 200px">TOTAL AMOUNT</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="booking : ${bookings}">
+                        <td class="align-middle text-center" style="width: 200px">
+                            <a><img style="height: auto; width: auto; max-width: 90px; max-height: 90px;"
+                                    th:src="${booking.image}" alt="" width="90" height="90"></a>
+                        </td>
+                        <td class="align-middle text-center" style="width: 200px"
+                            th:text="${booking.id}"></td>
+                        <td class="align-middle text-center" style="width: 200px"
+                            th:text="${booking.created}"></td>
+                        <td class="align-middle text-center" style="width: 200px"
+                            th:text="${booking.dishesPreparation}"></td>
+                        <td class="align-middle text-center" style="width: 150px"
+                            th:text="${booking.dish}"></td>
+                        <td class="align-middle text-center" style="width: 150px"
+                            th:text="${booking.status}"></td>
+                        <td class="align-middle text-center" style="width: 150px"
+                            th:text="${booking.totalPrice} + '&#8372'"></td>
+                        <td class="align-middle text-center" style="width: 200px"
+                            th:text="${booking.totalAmount}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+        crossorigin="anonymous"></script>
+</body>z
+</html>

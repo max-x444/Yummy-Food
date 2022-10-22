@@ -1,0 +1,222 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <title>YummyFood</title>
+</head>
+
+<body>
+<div th:fragment="menu_fragment">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" th:href="@{/api/home}">
+                <img th:src="@{/logo.png}" width="30" height="30"
+                     class="d-inline-block align-top" alt="">
+                YummyFood
+            </a>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="nav navbar-nav">
+                    <li class="nav-item active">
+                        <a sec:authorize="isAuthenticated()" class="nav-link text-black" th:href="@{/api/user/profile}">Profile</a>
+                        <a sec:authorize="!isAuthenticated()" class="nav-link text-black" data-bs-toggle="modal" data-bs-target="#exampleModal">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-black" th:href="@{/api/dish-category/get-all}">Menu</a>
+                    </li>
+                    <li class="nav-item">
+                        <a sec:authorize="isAuthenticated()" class="nav-link text-black" th:href="@{/api/booking/get-all}">Orders</a>
+                        <a sec:authorize="!isAuthenticated()" type="button" class="nav-link text-black" data-bs-toggle="modal" data-bs-target="#exampleModal">Orders</a>
+                    </li>
+                    <li class="nav-item ">
+                        <a sec:authorize="hasAuthority('ADMIN')" class="nav-link text-black" th:href="@{/api/dish-category/get-all/admin}">Category</a>
+                    </li>
+                    <li class="nav-item ">
+                        <a sec:authorize="hasAuthority('ADMIN')" class="nav-link text-black" th:href="@{/api/booking/get-all/admin}">Order</a>
+                    </li>
+                </div>
+            </div>
+            <div class="collapse navbar-collapse justify-content-end">
+                <ul class="navbar-nav ">
+                    <li class="nav-item">
+                        <a sec:authorize="isAuthenticated()" class="nav-link" th:href="@{/api/booking-dish/get-all}">
+                            <img th:src="@{/basket.png}" alt="" width="30" height="30"></a>
+                        <a sec:authorize="!isAuthenticated()" type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            <img th:src="@{/basket.png}" alt="" width="30" height="30"></a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-black" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            Language
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <li><a class="dropdown-item" href="#">UA</a></li>
+                            <li><a class="dropdown-item" href="#">EN</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <div sec:authorize="!isAuthenticated()">
+                            <button type="button" class="btn btn-close-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                Sign In
+                            </button>
+                        </div>
+
+                        <form th:action="@{/logout}" method="POST" sec:authorize="isAuthenticated()">
+                            <input type="submit" class="btn btn-close-dark" value="Sign Out"/>
+                        </form>
+
+                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" sec:authorize="!isAuthenticated()">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-md-12 mt-5">
+                                                    <!-- Pills navs -->
+                                                    <ul class="nav nav-pills nav-justified mb-3"  role="tablist">
+                                                        <li class="nav-item" role="presentation">
+                                                            <button class="nav-link active" id="tab-login" data-bs-toggle="tab" data-bs-target="#pills-login"
+                                                                    type="button" role="tab" aria-controls="pills-login" aria-selected="true">Login</button>
+                                                        </li>
+                                                        <li class="nav-item" role="presentation">
+                                                            <button class="nav-link" id="tab-register" data-bs-toggle="tab" data-bs-target="#pills-register"
+                                                                    type="button" role="tab" aria-controls="pills-register" aria-selected="false">Register</button>
+                                                        </li>
+                                                    </ul>
+                                                    <!-- Pills navs -->
+
+                                                    <!-- Pills content -->
+<!--                                                    <div class="tab-content" sec:authorize="!isAuthenticated()">-->
+                                                    <div class="tab-content">
+                                                        <div class="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="tab-login">
+                                                            <form autocomplete="off" th:action="@{/login}" method='POST'>
+                                                                <!-- Username input -->
+                                                                <div class="form-outline mb-4">
+                                                                    <input type="text" name='username' id="loginName" class="form-control" required/>
+                                                                    <label class="form-label" for="loginName">Username</label>
+                                                                </div>
+
+                                                                <!-- Password input -->
+                                                                <div class="form-outline mb-4">
+                                                                    <input type="password" name='password' id="loginPassword" class="form-control" required/>
+                                                                    <label class="form-label" for="loginPassword">Password</label>
+                                                                </div>
+
+                                                                <!-- 2 column grid layout -->
+                                                                <div class="row mb-4">
+                                                                    <div class="col-md-6 d-flex justify-content-center">
+                                                                        <!-- Checkbox -->
+                                                                        <div class="form-check mb-3 mb-md-0">
+                                                                            <input class="form-check-input" type="checkbox" value="" id="loginCheck" checked/>
+                                                                            <label class="form-check-label" for="loginCheck"> Remember me </label>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-md-6 d-flex justify-content-center">
+                                                                        <!-- Simple link -->
+                                                                        <a href="#!">Forgot password?</a>
+                                                                    </div>
+                                                                </div>
+
+                                                                <!-- Submit button -->
+                                                                <button type="submit" class="btn btn-primary btn-block mb-4">Sign in</button>
+                                                            </form>
+                                                        </div>
+
+                                                        <div class="tab-pane fade" id="pills-register" role="tabpanel" aria-labelledby="tab-register">
+                                                            <form autocomplete="off" class="needs-validation" th:action="@{/api/user/create}" method="POST">
+                                                                <!-- Name input -->
+                                                                <div class="form-outline mb-4">
+                                                                    <input type="text" id="registerName" class="form-control" name="name" required/>
+                                                                    <label class="form-label" for="registerName">Name</label>
+                                                                </div>
+
+                                                                <!-- Username input -->
+                                                                <div class="form-outline mb-4">
+                                                                    <input type="text" id="registerUsername" class="form-control" name="username" required/>
+                                                                    <label class="form-label" for="registerUsername">Username</label>
+                                                                </div>
+
+                                                                <!-- Email input -->
+                                                                <div class="form-outline mb-4">
+                                                                    <input type="email" id="registerEmail" class="form-control" name="email" required/>
+                                                                    <label class="form-label" for="registerEmail">Email</label>
+                                                                </div>
+
+                                                                <!-- Password input -->
+                                                                <div class="form-outline mb-4">
+                                                                    <input type="password" id="registerPassword" class="form-control" name="password" required/>
+                                                                    <label class="form-label" for="registerPassword">Password</label>
+                                                                </div>
+
+                                                                <!-- Repeat Password input -->
+                                                                <div class="form-outline mb-4">
+                                                                    <input type="password" id="registerRepeatPassword" class="form-control" required/>
+                                                                    <label class="form-label" for="registerRepeatPassword">Repeat password</label>
+                                                                </div>
+
+                                                                <!-- Submit button -->
+                                                                <button type="submit" class="btn btn-primary btn-block mb-3">Sign in</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Pills content -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+        crossorigin="anonymous">
+</script>
+
+<!-- Pop-up window -->
+<script>
+    const myModal = document.getElementById('myModal')
+    const myInput = document.getElementById('myInput')
+
+    myModal.addEventListener('shown.bs.modal', () => {
+        myInput.focus()
+    })
+</script>
+<!-- Pop-up window -->
+
+<!-- Validation -->
+<script>
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+    (function () {
+        'use strict'
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        var forms = document.querySelectorAll('.needs-validation')
+
+        // Loop over them and prevent submission
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+
+                    form.classList.add('was-validated')
+                }, false)
+            })
+    })()
+</script>
+<!-- Validation -->
+
+</body>
+</html>
