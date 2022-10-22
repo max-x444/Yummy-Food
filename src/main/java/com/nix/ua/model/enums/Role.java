@@ -1,17 +1,12 @@
 package com.nix.ua.model.enums;
 
-public enum Role {
-    ADMIN("admin"),
-    GUEST("guest"),
-    USER("user");
+import org.springframework.security.core.GrantedAuthority;
 
-    private final String title;
+public enum Role implements GrantedAuthority {
+    ADMIN, USER;
 
-    Role(String title) {
-        this.title = title;
-    }
-
-    public String getTitle() {
-        return title;
+    @Override
+    public String getAuthority() {
+        return name();
     }
 }

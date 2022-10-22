@@ -1,7 +1,9 @@
 package com.nix.ua.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Column;
@@ -10,8 +12,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Data
-@Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
+@Entity
 public class DishCategory {
     @Id
     @GeneratedValue(generator = "UUID")
@@ -22,6 +26,5 @@ public class DishCategory {
     @Column(unique = true)
     private String name;
 
-    @Column(length = 10_000_000)
     private String image;
 }

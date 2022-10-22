@@ -1,8 +1,10 @@
 package com.nix.ua.model;
 
 import com.nix.ua.model.enums.Status;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.CascadeType;
@@ -18,8 +20,10 @@ import javax.persistence.ManyToOne;
 import java.time.LocalDateTime;
 
 @Data
-@Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
+@Entity
 public class Booking {
     @Id
     @GeneratedValue(generator = "UUID")
@@ -32,10 +36,16 @@ public class Booking {
 
     private LocalDateTime created;
 
+    @Column(name = "total_amount")
+    private int totalAmount;
+
+    @Column(name = "total_price")
+    private Double totalPrice;
+
     @Column(name = "dishes_preparation_time")
     private LocalDateTime dishesPreparationTime;
 
-    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 }
