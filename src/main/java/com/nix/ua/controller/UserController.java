@@ -55,14 +55,15 @@ public class UserController {
     @PutMapping("/update")
     public ModelAndView update(@ModelAttribute("profile") @Valid User profile, BindingResult bindingResult,
                                @RequestParam("file") MultipartFile file, ModelAndView modelAndView) {
+        System.out.println("2222222");
         if (bindingResult.hasErrors()) {
             modelAndView.setViewName("profile/profile");
             return modelAndView;
         }
-
-        ImageUtil.saveImage(file);
+        System.out.println("2222222");
         final Optional<User> userOptional = userService.findById(profile.getId());
-
+        final Optional<String> linkImage = ImageUtil.saveImage(file);
+        linkImage.ifPresent(profile::setAvatar);
         if (userOptional.isPresent()) {
             final User updateUser = userOptional.get();
             updateUser.setName(profile.getName());
@@ -71,38 +72,9 @@ public class UserController {
             updateUser.setPhone(profile.getPhone());
             updateUser.setEmail(profile.getEmail());
             updateUser.setAvatar(profile.getAvatar());
-            return checkUsernameAndEmail(updateUser, modelAndView);
+            return userService.checkUsernameAndEmail(updateUser, modelAndView);
         }
-        modelAndView.setViewName("redirect:/api/home");
+        modelAndView.setViewName("redirect:/api/user/profile");
         return modelAndView;
-    }
-
-    private ModelAndView checkUsernameAndEmail(User updateUser, ModelAndView modelAndView) {
-        if (checkUsername(updateUser.getId(), updateUser.getUsername())) {
-            if (checkEmail(updateUser.getId(), updateUser.getEmail())) {
-                System.out.println(updateUser.getAvatar());
-                userService.update(updateUser);
-            } else {
-                modelAndView.addObject("errorEmail", "This email already exists");
-                modelAndView.setViewName("profile/profile");
-                return modelAndView;
-            }
-        } else {
-            modelAndView.addObject("errorUsername", "This username already exists");
-            modelAndView.setViewName("profile/profile");
-            return modelAndView;
-        }
-        modelAndView.setViewName("redirect:/api/home");
-        return modelAndView;
-    }
-
-    private boolean checkUsername(String id, String username) {
-        final Optional<User> optionalUser = userService.findUserByUsername(username);
-        return optionalUser.map(user -> user.getId().equals(id)).orElse(true);
-    }
-
-    private boolean checkEmail(String id, String email) {
-        final Optional<User> optionalUser = userService.findUserByEmail(email);
-        return optionalUser.map(user -> user.getId().equals(id)).orElse(true);
     }
 }

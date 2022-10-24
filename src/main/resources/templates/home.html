@@ -68,9 +68,12 @@
                             <input type="submit" class="btn btn-close-dark" value="Sign Out"/>
                         </form>
 
-                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" sec:authorize="!isAuthenticated()">
+                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" sec:authorize="!isAuthenticated()" data-bs-backdrop="static">
                             <div class="modal-dialog">
                                 <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
                                     <div class="modal-body">
                                         <div class="container">
                                             <div class="row">
@@ -122,7 +125,14 @@
                                                                 </div>
 
                                                                 <!-- Submit button -->
-                                                                <button type="submit" class="btn btn-primary btn-block mb-4">Sign in</button>
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <button style="width: 100%" type="submit" class="btn btn-primary btn-block mb-4">Sign in</button>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <button style="width: 100%" type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
+                                                                    </div>
+                                                                </div>
                                                             </form>
                                                         </div>
 
@@ -158,8 +168,15 @@
                                                                     <label class="form-label" for="registerRepeatPassword">Repeat password</label>
                                                                 </div>
 
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <button style="width: 100%" type="submit" class="btn btn-primary btn-block mb-3">Sign in</button>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <button style="width: 100%" type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
+                                                                    </div>
+                                                                </div>
                                                                 <!-- Submit button -->
-                                                                <button type="submit" class="btn btn-primary btn-block mb-3">Sign in</button>
                                                             </form>
                                                         </div>
                                                     </div>

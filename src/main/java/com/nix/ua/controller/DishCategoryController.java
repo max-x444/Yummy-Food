@@ -38,7 +38,8 @@ public class DishCategoryController {
     @PostMapping("/create")
     public ModelAndView create(DishCategory dishCategory, @RequestParam("file") MultipartFile file,
                                int size, ModelAndView modelAndView) {
-        ImageUtil.saveImage(file);
+        final Optional<String> optionalImage = ImageUtil.saveImage(file);
+        optionalImage.ifPresent(dishCategory::setImage);
         dishCategoryService.create(dishCategory);
         modelAndView.setViewName("redirect:/api/dish-category/get-all/admin?size=" + size + "&page=1");
         return modelAndView;
@@ -47,7 +48,8 @@ public class DishCategoryController {
     @PutMapping("/update")
     public ModelAndView update(DishCategory dishCategory, @RequestParam("file") MultipartFile file,
                                int size, ModelAndView modelAndView) {
-        ImageUtil.saveImage(file);
+        final Optional<String> optionalImage = ImageUtil.saveImage(file);
+        optionalImage.ifPresent(dishCategory::setImage);
         dishCategoryService.update(dishCategory);
         modelAndView.setViewName("redirect:/api/dish-category/get-all/admin?size=" + size + "&page=1");
         return modelAndView;

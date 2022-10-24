@@ -38,7 +38,7 @@
                               th:method="get">
                             <label style="width: 100%">
                                 Show
-                                <select onchange="checkOption(this)" name="size" aria-controls="example"
+                                <select onchange="checkOption()" name="size" aria-controls="example"
                                         class="form-select form-select-sm">
                                     <option th:selected="${tPage.size == 5}" value="5">5</option>
                                     <option th:selected="${tPage.size == 10}" value="10">10</option>
@@ -76,7 +76,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="dishCategory: ${tPage.content}">
+                <tr th:if="${!tPage?.content.isEmpty()}" th:each="dishCategory: ${tPage.content}">
                     <td>
                         <span class="custom-checkbox">
                             <input type="checkbox" id="checkbox1" name="options[]" value="1">
@@ -108,7 +108,7 @@
                 </tr>
                 </tfoot>
             </table>
-            <div class="clearfix">
+            <div class="clearfix" th:if="${!tPage?.content.isEmpty()}">
                 <div class="hint-text">
                     Showing
                     <b th:text="${tPage.size * (currentPage - 1) + 1}"></b>
@@ -163,7 +163,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Image</label>
-                        <input type="file" name="file" class="form-control-file">
+                        <input type="file" name="file" class="form-control-file" accept="image/png, image/jpg, image/jpeg">
                     </div>
                     <div class="form-group">
                         <label>Name</label>
@@ -193,7 +193,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Image</label>
-                        <input type="file" name="file" class="form-control-file">
+                        <input type="file" name="file" class="form-control-file" accept="image/png, image/jpg, image/jpeg">
                     </div>
                     <div class="form-group" hidden>
                         <label>Id</label>
@@ -243,13 +243,8 @@
 </div>
 
 <script>
-    function checkOption(option) {
-        const form = document.getElementById('form');
-        const submit = document.getElementById('submit');
-        let action = form.getAttribute('action');
-        action = action.replace('5', option.getAttribute('value'));
-        form.setAttribute('action', action);
-        submit.click();
+    function checkOption() {
+        document.getElementById('submit').click();
     }
 
     function setValue(editButton) {

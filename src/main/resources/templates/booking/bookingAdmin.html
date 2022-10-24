@@ -28,12 +28,10 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-4 mt-3">
-                        <form id="form" th:action="@{/api/booking/get-all/admin(size=${5}, page=${1})}"
-                              th:method="get">
+                        <form id="form" th:action="@{/api/booking/get-all/admin}" th:method="get">
                             <label style="width: 100%">
                                 Show
-                                <select onchange="checkOption(this)" name="size" aria-controls="example"
-                                        class="form-select form-select-sm">
+                                <select onchange="checkOption()" name="size" class="form-select form-select-sm">
                                     <option th:selected="${tPage.size == 5}" value="5">5</option>
                                     <option th:selected="${tPage.size == 10}" value="10">10</option>
                                     <option th:selected="${tPage.size == 15}" value="15">15</option>
@@ -45,12 +43,21 @@
                     </div>
                     <div class="col-sm-4 mt-3">
                     </div>
-                    <div class="col-sm-4 mt-3">
-                        <label style="width: 100%">Search:
-                            <input id="search" onkeyup="filterTable()" type="search"
-                                   class="form-control form-control-sm" placeholder=""
-                                   aria-controls="example">
-                        </label>
+                    <div class="col-sm-4 mt-1">
+                        <form id="formSearch" th:action="@{/api/booking/search}" th:method="get">
+                            <div hidden>
+                                <input id="size" name="size" th:value="${5}">
+                                <input id="filter" name="filter" th:value="${1}">
+                            </div>
+                            <input type="submit" style="margin-right: 270px" class="btn site-btn btn-close-dark" value="Search:">
+                            <input id="searchValue" th:value="${filter}" onkeyup="searchTable()" style="width: 100%" type="search" class="form-control form-control-sm">
+                        </form>
+                        <form id="formClear" th:action="@{/api/booking/get-all/admin}" th:method="get">
+                            <div hidden>
+                                <input id="sizeClear" name="size" th:value="${5}">
+                            </div>
+                            <input onclick="clearFilter()" type="submit" style="margin-right: 250px" class="btn site-btn btn-close-dark" value="Clear filter">
+                        </form>
                     </div>
                 </div>
             </div>
@@ -66,7 +73,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="t: ${tPage.content}">
+                <tr th:if="${!tPage?.content.isEmpty()}" th:each="t: ${tPage.content}">
                     <td class="text-center" style="width: 300px" th:text="${t.id}"></td>
                     <td class="text-center" style="width: 100px" th:text="${t.created}"></td>
                     <td class="text-center" style="width: 100px" th:text="${t.totalPrice}"></td>
@@ -86,7 +93,7 @@
                 </tr>
                 </tfoot>
             </table>
-            <div class="clearfix">
+            <div class="clearfix" th:if="${!tPage?.content.isEmpty()}">
                 <div class="hint-text">
                     Showing
                     <b th:text="${tPage.size * (currentPage - 1) + 1}"></b>
@@ -104,7 +111,7 @@
                 <div class="pagination">
                     <li class="page-item">
                         <a th:if="${currentPage > 1}"
-                           th:href="@{/api/booking/get-all/admin(size=${tPage.size}, page=${currentPage - 1})}"
+                           th:href="@{/api/booking/search(size=${tPage.size}, page=${currentPage - 1}, filter=${filter})}"
                            class="page-link">Previous</a>
                         <a th:if="${currentPage == 1}"
                            class="page-link">Previous</a>
@@ -112,13 +119,13 @@
                     <li class="page-item" th:if="${tPage.totalPages > 0}"
                         th:each="pageNumber : ${pageNumbers}"
                         th:class="${pageNumber==tPage.number + 1} ? active">
-                        <a th:href="@{/api/booking/get-all/admin(size=${tPage.size}, page=${pageNumber})}"
+                        <a th:href="@{/api/booking/search(size=${tPage.size}, page=${pageNumber}, filter=${filter})}"
                            th:text="${pageNumber}" class="page-link">
                         </a>
                     </li>
                     <li class="page-item">
                         <a th:if="${currentPage != tPage.totalPages}"
-                           th:href="@{/api/booking/get-all/admin(size=${tPage.size}, page=${currentPage + 1})}"
+                           th:href="@{/api/booking/search(size=${tPage.size}, page=${currentPage + 1}, filter=${filter})}"
                            class="page-link">Next</a>
                         <a th:if="${currentPage == tPage.totalPages}"
                            class="page-link">Next</a>
@@ -130,32 +137,26 @@
 </div>
 
 <script>
-    function checkOption(option) {
-        const form = document.getElementById('form');
-        const submit = document.getElementById('submit');
-        let action = form.getAttribute('action');
-        action = action.replace('5', option.getAttribute('value'));
-        form.setAttribute('action', action);
-        submit.click();
+    function checkOption() {
+        document.getElementById('submit').click();
     }
 
-    function filterTable() {
-        const search = document.getElementById('search');
-        const table = document.getElementById('table');
-        const tBody = table.getElementsByTagName('tbody');
-        let filter = search.value.toUpperCase();
-        let txtValue;
-        for (let tr of tBody[0].getElementsByTagName('tr')) {
-            tr.style.display = "none";
-            for (let td of tr.getElementsByTagName('td')) {
-                if (td) {
-                    txtValue = td.textContent || td.innerText;
-                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                        tr.style.display = "";
-                    }
-                }
-            }
-        }
+    function searchTable() {
+        const form = document.getElementById('form');
+        const optionValue = form.getElementsByTagName('select').item(0).value;
+        const formSearch = document.getElementById('formSearch');
+        const input = formSearch.getElementsByTagName('input');
+        const searchValue = input.item(3).value;
+        input.item(0).setAttribute('value', optionValue);
+        input.item(1).setAttribute('value', searchValue);
+    }
+
+    function clearFilter() {
+        const form = document.getElementById('form');
+        const optionValue = form.getElementsByTagName('select').item(0).value;
+        const formClear = document.getElementById('formClear');
+        const input = formClear.getElementsByTagName('input');
+        input.item(0).setAttribute('value', optionValue);
     }
 </script>
 

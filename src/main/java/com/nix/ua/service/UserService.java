@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Optional;
 
@@ -68,5 +69,33 @@ public class UserService extends MainService<User> implements UserDetailsService
 
     public Optional<User> findUserByEmail(String email) {
         return userRepository.findUserByEmail(email);
+    }
+
+    public ModelAndView checkUsernameAndEmail(User updateUser, ModelAndView modelAndView) {
+        if (checkUsername(updateUser.getId(), updateUser.getUsername())) {
+            if (checkEmail(updateUser.getId(), updateUser.getEmail())) {
+                update(updateUser);
+            } else {
+                modelAndView.addObject("errorEmail", "This email already exists");
+                modelAndView.setViewName("profile/profile");
+                return modelAndView;
+            }
+        } else {
+            modelAndView.addObject("errorUsername", "This username already exists");
+            modelAndView.setViewName("profile/profile");
+            return modelAndView;
+        }
+        modelAndView.setViewName("redirect:/api/user/profile");
+        return modelAndView;
+    }
+
+    private boolean checkUsername(String id, String username) {
+        final Optional<User> optionalUser = findUserByUsername(username);
+        return optionalUser.map(user -> user.getId().equals(id)).orElse(true);
+    }
+
+    private boolean checkEmail(String id, String email) {
+        final Optional<User> optionalUser = findUserByEmail(email);
+        return optionalUser.map(user -> user.getId().equals(id)).orElse(true);
     }
 }

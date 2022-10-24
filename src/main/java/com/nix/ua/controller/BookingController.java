@@ -60,10 +60,17 @@ public class BookingController {
     }
 
     @GetMapping("/get-all/admin")
-    public ModelAndView getAll(@RequestParam("page") Optional<Integer> page,
-                               @RequestParam("size") Optional<Integer> size, ModelAndView modelAndView) {
-        modelAndView.addObject("tPage", null);
+    public ModelAndView getAll(@RequestParam("page") Optional<Integer> page, @RequestParam("size") Optional<Integer> size,
+                               ModelAndView modelAndView) {
         return pageService.getPaginated(page, size, bookingService.getAllAcceptedAndReadyBookings(Status.PENDING),
+                "booking/bookingAdmin", modelAndView);
+    }
+
+    @GetMapping("/search")
+    public ModelAndView search(@RequestParam("page") Optional<Integer> page, @RequestParam("size") Optional<Integer> size,
+                               @RequestParam("filter") Optional<String> filter, ModelAndView modelAndView) {
+        filter.ifPresent(s -> modelAndView.addObject("filter", s));
+        return pageService.getPaginated(page, size, bookingService.search(Status.PENDING, filter),
                 "booking/bookingAdmin", modelAndView);
     }
 }
