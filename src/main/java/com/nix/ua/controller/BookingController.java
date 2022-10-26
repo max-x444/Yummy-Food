@@ -49,10 +49,6 @@ public class BookingController {
 
     @GetMapping("/get-all")
     public ModelAndView getAll(@AuthenticationPrincipal User user, ModelAndView modelAndView) {
-        if (user == null) {
-            modelAndView.setViewName("redirect:/api/home");
-            return modelAndView;
-        }
         final List<BookingDTO> bookings = bookingService.getAllAcceptedBookings(user.getId());
         modelAndView.addObject("bookings", bookings);
         modelAndView.setViewName("booking/booking");

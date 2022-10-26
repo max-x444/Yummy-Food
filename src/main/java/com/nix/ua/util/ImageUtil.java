@@ -1,6 +1,8 @@
 package com.nix.ua.util;
 
 import lombok.SneakyThrows;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,6 +23,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class ImageUtil {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ImageUtil.class);
+
     private ImageUtil() {
     }
 
@@ -73,8 +77,9 @@ public final class ImageUtil {
             }
             return formattedAnswer(content);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            LOGGER.error(e.getMessage());
         }
+        return Optional.empty();
     }
 
     private static Optional<String> formattedAnswer(StringBuilder content) {

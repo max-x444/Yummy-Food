@@ -4,6 +4,8 @@ import com.nix.ua.model.User;
 import com.nix.ua.model.enums.Role;
 import com.nix.ua.service.UserService;
 import com.nix.ua.util.ImageUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
@@ -23,6 +25,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
 
     @Autowired
@@ -31,14 +34,8 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    public ModelAndView getProfile(@AuthenticationPrincipal User user, @ModelAttribute @Valid User profile, ModelAndView modelAndView) {
-        if (user == null) {
-            modelAndView.setViewName("redirect:/api/home");
-            return modelAndView;
-        }
-        if (profile.getId() == null) {
-            profile = userService.findById(user.getId()).orElse(null);
-        }
+    public ModelAndView getProfile(@AuthenticationPrincipal User profile, ModelAndView modelAndView) {
+        profile = userService.findById(profile.getId()).orElse(null);
         modelAndView.addObject("profile", profile);
         modelAndView.setViewName("profile/profile");
         return modelAndView;
@@ -47,7 +44,7 @@ public class UserController {
     @PostMapping("/create")
     public ModelAndView create(User item, ModelAndView modelAndView) {
         item.setRole(Role.USER);
-        userService.create(item);
+        LOGGER.info("Create user: {}", userService.create(item));
         modelAndView.setViewName("redirect:/api/home");
         return modelAndView;
     }
@@ -55,12 +52,10 @@ public class UserController {
     @PutMapping("/update")
     public ModelAndView update(@ModelAttribute("profile") @Valid User profile, BindingResult bindingResult,
                                @RequestParam("file") MultipartFile file, ModelAndView modelAndView) {
-        System.out.println("2222222");
         if (bindingResult.hasErrors()) {
             modelAndView.setViewName("profile/profile");
             return modelAndView;
         }
-        System.out.println("2222222");
         final Optional<User> userOptional = userService.findById(profile.getId());
         final Optional<String> linkImage = ImageUtil.saveImage(file);
         linkImage.ifPresent(profile::setAvatar);

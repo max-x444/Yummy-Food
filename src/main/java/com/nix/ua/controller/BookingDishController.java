@@ -61,7 +61,8 @@ public class BookingDishController {
     }
 
     @PostMapping("/create")
-    public ModelAndView create(@AuthenticationPrincipal User user, @ModelAttribute Dish dish, ModelAndView modelAndView, int amount) {
+    public ModelAndView create(@AuthenticationPrincipal User user, @ModelAttribute Dish dish, ModelAndView modelAndView,
+                               int amount) {
         bookingDishService.create(user, dish, amount);
         modelAndView.setViewName("redirect:/api/booking-dish/get-all");
         return modelAndView;
@@ -69,10 +70,6 @@ public class BookingDishController {
 
     @GetMapping("/get-all")
     public ModelAndView getAll(@AuthenticationPrincipal User user, ModelAndView modelAndView) {
-        if (user == null) {
-            modelAndView.setViewName("redirect:/api/home");
-            return modelAndView;
-        }
         final List<BookingDish> bookingDishes =
                 bookingDishService.getAllByBookingStatusAndBookingUserUsername(Status.PENDING, user.getUsername());
         modelAndView.addObject("bookingDishes", bookingDishes);

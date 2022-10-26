@@ -30,7 +30,7 @@ public class PageService<T> {
             list = collect.subList(startItem, toIndex);
         }
 
-        return new PageImpl<>(list, PageRequest.of(currentPage, pageSize), collect.size());
+        return new PageImpl<>(list, pageable, collect.size());
     }
 
     public ModelAndView getPaginated(Optional<Integer> page, Optional<Integer> size,

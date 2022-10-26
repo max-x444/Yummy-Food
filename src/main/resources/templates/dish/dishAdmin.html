@@ -23,21 +23,19 @@
             <div class="table-title">
                 <div class="row">
                     <div class="col-sm-6">
-                        <h2>Manage <b>Categories</b></h2>
+                        <h2>Manage <b>Products</b></h2>
                     </div>
                     <div class="col-sm-6">
-                        <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
-                            <i class="material-icons">&#xE147;</i> <span>Add New Category</span></a>
+                        <a class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addModal">
+                            <i class="material-icons">&#xE147;</i> <span>Add New Product</span></a>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-4 mt-3">
-                        <form id="form" th:action="@{/api/dish-category/get-all/admin(size=${5}, page=${1})}"
-                              th:method="get">
+                        <form id="form" th:action="@{/api/dish/get-all/admin(size=${5}, page=${1})}" th:method="get">
                             <label style="width: 100%">
                                 Show
-                                <select onchange="checkOption()" name="size" aria-controls="example"
-                                        class="form-select form-select-sm">
+                                <select onchange="checkOption()" name="size" class="form-select form-select-sm">
                                     <option th:selected="${tPage.size == 5}" value="5">5</option>
                                     <option th:selected="${tPage.size == 10}" value="10">10</option>
                                     <option th:selected="${tPage.size == 15}" value="15">15</option>
@@ -51,9 +49,7 @@
                     </div>
                     <div class="col-sm-4 mt-3">
                         <label style="width: 100%">Search:
-                            <input id="search" onkeyup="filterTable()" type="search"
-                                   class="form-control form-control-sm" placeholder=""
-                                   aria-controls="example">
+                            <input id="search" onkeyup="filterTable()" type="search" class="form-control form-control-sm">
                         </label>
                     </div>
                 </div>
@@ -61,26 +57,34 @@
             <table id="table" class="table table-striped table-hover">
                 <thead>
                 <tr>
-                    <th></th>
-                    <th>ID</th>
-                    <th>IMAGE</th>
-                    <th>NAME</th>
-                    <th style="text-align:center; width: 150px">ACTIONS</th>
+                    <th style="text-align:center; width: 18%">ID</th>
+                    <th style="text-align:center; width: 18%">DESCRIPTION</th>
+                    <th style="text-align:center; width: 10%">IMAGE</th>
+                    <th style="text-align:center; width: 18%">CATEGORY ID</th>
+                    <th style="text-align:center; width: 8%">NAME</th>
+                    <th style="text-align:center; width: 8%">PRICE</th>
+                    <th style="text-align:center; width: 8%">WEIGHT</th>
+                    <th style="text-align:center; width: 8%">CALORIES</th>
+                    <th style="text-align:center; width: 10%">ACTIONS</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:if="${!tPage?.content.isEmpty()}" th:each="dishCategory: ${tPage.content}">
-                    <th></th>
-                    <td th:text="${dishCategory.id}"></td>
-                    <td th:text="${dishCategory.image}"></td>
-                    <td th:text="${dishCategory.name}"></td>
-                    <td style="width: 150px">
+                <tr th:if="${!tPage?.content.isEmpty()}" th:each="t: ${tPage.content}">
+                    <td class="text-center" style="width: 18%" th:text="${t.id}"></td>
+                    <td class="text-center" style="width: 18%" th:text="${t.description}"></td>
+                    <td class="text-center" style="width: 10%" th:text="${t.image}"></td>
+                    <td class="text-center" style="width: 18%" th:text="${t.dishCategory.id}"></td>
+                    <td class="text-center" style="width: 8%" th:text="${t.name}"></td>
+                    <td class="text-center" style="width: 8%" th:text="${t.price} + '&#8372'"></td>
+                    <td class="text-center" style="width: 8%" th:text="${t.weight}"></td>
+                    <td class="text-center" style="width: 8%" th:text="${t.calories}"></td>
+                    <td style="width: 10%">
                         <a class="btn edit" onclick="setValue(this)" data-bs-toggle="modal"
-                           data-bs-target="#editCategoryModal">
+                           data-bs-target="#editModal">
                             <i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i>
                         </a>
                         <a class="btn delete" onclick="setDeleteId(this)" data-bs-toggle="modal"
-                           data-bs-target="#deleteCategoryModal">
+                           data-bs-target="#deleteModal">
                             <i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i>
                         </a>
                     </td>
@@ -88,11 +92,15 @@
                 </tbody>
                 <tfoot>
                 <tr>
-                    <th></th>
-                    <th>ID</th>
-                    <th>IMAGE</th>
-                    <th>NAME</th>
-                    <th style="text-align:center; width: 150px">ACTIONS</th>
+                    <th style="text-align:center; width: 18%">ID</th>
+                    <th style="text-align:center; width: 18%">DESCRIPTION</th>
+                    <th style="text-align:center; width: 10%">IMAGE</th>
+                    <th style="text-align:center; width: 18%">CATEGORY ID</th>
+                    <th style="text-align:center; width: 8%">NAME</th>
+                    <th style="text-align:center; width: 8%">PRICE</th>
+                    <th style="text-align:center; width: 8%">WEIGHT</th>
+                    <th style="text-align:center; width: 8%">CALORIES</th>
+                    <th style="text-align:center; width: 10%">ACTIONS</th>
                 </tr>
                 </tfoot>
             </table>
@@ -114,7 +122,7 @@
                 <div class="pagination">
                     <li class="page-item">
                         <a th:if="${currentPage > 1}"
-                           th:href="@{/api/dish-category/get-all/admin(size=${tPage.size}, page=${currentPage - 1})}"
+                           th:href="@{/api/dish/get-all/admin(size=${tPage.size}, page=${currentPage - 1})}"
                            class="page-link">Previous</a>
                         <a th:if="${currentPage == 1}"
                            class="page-link">Previous</a>
@@ -122,13 +130,13 @@
                     <li class="page-item" th:if="${tPage.totalPages > 0}"
                         th:each="pageNumber : ${pageNumbers}"
                         th:class="${pageNumber==tPage.number + 1} ? active">
-                        <a th:href="@{/api/dish-category/get-all/admin(size=${tPage.size}, page=${pageNumber})}"
+                        <a th:href="@{/api/dish/get-all/admin(size=${tPage.size}, page=${pageNumber})}"
                            th:text="${pageNumber}" class="page-link">
                         </a>
                     </li>
                     <li class="page-item">
                         <a th:if="${currentPage != tPage.totalPages}"
-                           th:href="@{/api/dish-category/get-all/admin(size=${tPage.size}, page=${currentPage + 1})}"
+                           th:href="@{/api/dish/get-all/admin(size=${tPage.size}, page=${currentPage + 1})}"
                            class="page-link">Next</a>
                         <a th:if="${currentPage == tPage.totalPages}"
                            class="page-link">Next</a>
@@ -140,23 +148,42 @@
 </div>
 
 <!-- Add Modal HTML -->
-<div id="addCategoryModal" class="modal fade" data-bs-backdrop="static">
+<div id="addModal" class="modal fade" data-bs-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form th:action="@{/api/dish-category/create}" th:method="post" enctype="multipart/form-data">
+            <form th:action="@{/api/dish/create}" th:method="post" enctype="multipart/form-data">
                 <div class="modal-header">
-                    <h4 class="modal-title">Add Category</h4>
+                    <h4 class="modal-title">Add Product</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Image</label>
-                        <input type="file" name="file" class="form-control-file"
-                               accept="image/png, image/jpg, image/jpeg">
+                        <input type="file" name="file" class="form-control-file" accept="image/png, image/jpg, image/jpeg">
                     </div>
                     <div class="form-group">
                         <label>Name</label>
                         <input type="text" name="name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <input type="text" name="description" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Price</label>
+                        <input type="number" name="price" min="1" value="1" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Weight</label>
+                        <input type="number" name="weight" min="1" value="1" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Calories</label>
+                        <input type="number" name="calories" min="1" value="1" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Category Id</label>
+                        <input type="text" name="dishCategory" class="form-control" required>
                     </div>
                     <div hidden>
                         <input id="addSize" type="number" name="size">
@@ -171,27 +198,46 @@
     </div>
 </div>
 <!-- Edit Modal HTML -->
-<div id="editCategoryModal" class="modal fade" data-bs-backdrop="static">
+<div id="editModal" class="modal fade" data-bs-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form th:action="@{/api/dish-category/update}" th:method="put" enctype="multipart/form-data">
+            <form th:action="@{/api/dish/update}" th:method="put" enctype="multipart/form-data">
                 <div class="modal-header">
                     <h4 class="modal-title">Edit Category</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group">
-                        <label>Image</label>
-                        <input type="file" name="file" class="form-control-file"
-                               accept="image/png, image/jpg, image/jpeg">
-                    </div>
                     <div class="form-group" hidden>
                         <label>Id</label>
                         <input id="id" type="text" name="id" class="form-control">
                     </div>
                     <div class="form-group">
+                        <label>Image</label>
+                        <input type="file" name="file" class="form-control-file" accept="image/png, image/jpg, image/jpeg">
+                    </div>
+                    <div class="form-group">
                         <label>Name</label>
                         <input id="name" type="text" name="name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <input id="description" type="text" name="description" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Price</label>
+                        <input id="price1" type="number" name="price" min="1" value="1" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Weight</label>
+                        <input id="weight" type="number" name="weight" min="1" value="1" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Calories</label>
+                        <input id="calories" type="number" name="calories" min="1" value="1" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Category Id</label>
+                        <input id="dishCategory" type="text" name="dishCategory" class="form-control" required>
                     </div>
                     <div hidden>
                         <input id="image" name="image">
@@ -207,12 +253,12 @@
     </div>
 </div>
 <!-- Delete Modal HTML -->
-<div id="deleteCategoryModal" class="modal fade" data-bs-backdrop="static">
+<div id="deleteModal" class="modal fade" data-bs-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form th:action="@{/api/dish-category/delete}" th:method="delete">
+            <form th:action="@{/api/dish/delete}" th:method="delete">
                 <div class="modal-header">
-                    <h4 class="modal-title">Delete Category</h4>
+                    <h4 class="modal-title">Delete Product</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -238,16 +284,22 @@
     }
 
     function setValue(editButton) {
-        document.getElementById("id").setAttribute('value', tBody.childNodes[3].textContent);
-        document.getElementById("name").setAttribute('value', tBody.childNodes[5].textContent);
-        document.getElementById("image").setAttribute('value', tBody.childNodes[7].textContent);
+        const tBody = editButton.parentNode.parentNode;
+        document.getElementById("id").setAttribute('value', tBody.childNodes[1].textContent);
+        document.getElementById("description").setAttribute('value', tBody.childNodes[3].textContent);
+        document.getElementById("image").setAttribute('value', tBody.childNodes[5].textContent);
+        document.getElementById("dishCategory").setAttribute('value', tBody.childNodes[7].textContent);
+        document.getElementById("name").setAttribute('value', tBody.childNodes[9].textContent);
+        document.getElementById("price1").setAttribute('value', tBody.childNodes[11].textContent.substring(0, tBody.childNodes[11].textContent.length - 1));
+        document.getElementById("weight").setAttribute('value', tBody.childNodes[13].textContent);
+        document.getElementById("calories").setAttribute('value', tBody.childNodes[15].textContent);
         setSizePage('updateSize')
     }
 
     function setDeleteId(deleteButton) {
         const tBody = deleteButton.parentNode.parentNode;
         const modalId = document.getElementById("deleteId");
-        let id = tBody.childNodes[3].textContent;
+        let id = tBody.childNodes[1].textContent;
         modalId.setAttribute('value', id);
         setSizePage('deleteSize')
     }
@@ -282,6 +334,7 @@
         }
     }
 </script>
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"

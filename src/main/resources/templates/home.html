@@ -35,6 +35,9 @@
                         <a sec:authorize="hasAuthority('ADMIN')" class="nav-link text-black" th:href="@{/api/dish-category/get-all/admin}">Category</a>
                     </li>
                     <li class="nav-item ">
+                        <a sec:authorize="hasAuthority('ADMIN')" class="nav-link text-black" th:href="@{/api/dish/get-all/admin}">Products</a>
+                    </li>
+                    <li class="nav-item ">
                         <a sec:authorize="hasAuthority('ADMIN')" class="nav-link text-black" th:href="@{/api/booking/get-all/admin}">Order</a>
                     </li>
                 </div>

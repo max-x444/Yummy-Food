@@ -1,8 +1,6 @@
 package com.nix.ua.config;
 
 import com.nix.ua.handler.URLAuthenticationSuccessHandler;
-import com.nix.ua.handler.URLLogoutSuccessHandler;
-import com.nix.ua.model.enums.Role;
 import com.nix.ua.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -14,7 +12,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -49,7 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .invalidateHttpSession(true)
                 .logoutUrl("/logout")
-                .logoutSuccessHandler(myLogoutSuccessHandler());
+                .logoutSuccessUrl("/api/home");
     }
 
     @Override
@@ -60,10 +57,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public AuthenticationSuccessHandler myAuthenticationSuccessHandler(){
         return URLAuthenticationSuccessHandler.getInstance();
-    }
-
-    @Bean
-    public LogoutSuccessHandler myLogoutSuccessHandler(){
-        return URLLogoutSuccessHandler.getInstance();
     }
 }

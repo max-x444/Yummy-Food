@@ -1,5 +1,7 @@
 package com.nix.ua.handler;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
@@ -13,6 +15,7 @@ import java.io.IOException;
 
 
 public class URLAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
+    private static final Logger LOGGER = LoggerFactory.getLogger(URLAuthenticationSuccessHandler.class);
     private static URLAuthenticationSuccessHandler instance;
     private final RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
@@ -38,7 +41,7 @@ public class URLAuthenticationSuccessHandler implements AuthenticationSuccessHan
         if (!response.isCommitted()) {
             redirectStrategy.sendRedirect(request, response, targetUrl);
         } else {
-            System.out.println("Response has already been committed. Unable to redirect to " + targetUrl);
+            LOGGER.info("Response has already been committed. Unable to redirect to " + targetUrl);
         }
     }
 

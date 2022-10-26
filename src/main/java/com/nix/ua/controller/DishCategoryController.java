@@ -30,11 +30,6 @@ public class DishCategoryController {
         this.dishCategoryService = dishCategoryService;
     }
 
-    @PostMapping("/create/postman")
-    public DishCategory create(@RequestBody DishCategory dishCategory) {
-        return dishCategoryService.create(dishCategory);
-    }
-
     @PostMapping("/create")
     public ModelAndView create(DishCategory dishCategory, @RequestParam("file") MultipartFile file,
                                int size, ModelAndView modelAndView) {

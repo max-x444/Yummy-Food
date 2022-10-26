@@ -36,15 +36,14 @@ public class User implements UserDetails {
     private String surname;
 
     @Column(unique = true)
-    @Size(min = 10, max = 30)
+    @Size(min = 10, max = 20)
     private String email;
 
     @Column(unique = true)
-    @Size(min = 5, max = 20)
+    @Size(min = 4, max = 20)
     private String username;
 
-    @Length(max = 100)
-    @Size(min = 5, max = 100)
+    @Size(min = 4, max = 100)
     private String password;
 
     @Size(min = 10, max = 20)
