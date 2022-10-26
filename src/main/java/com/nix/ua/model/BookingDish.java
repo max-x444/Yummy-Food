@@ -27,7 +27,7 @@ public class BookingDish {
     @Column(name = "booking_dish_id")
     private String id;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     @JoinColumn(name = "booking_id")
     private Booking booking;
 

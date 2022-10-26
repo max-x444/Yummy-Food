@@ -38,4 +38,8 @@ public interface BookingRepository extends CrudRepository<Booking, String> {
     List<BookingDTO> getAllAcceptedBookings(@Param("user_id") String userId);
 
     Iterable<Booking> getAllByStatusNot(Status status);
+
+    List<Booking> getAllByStatusAndUser_Username(Status status, String username);
+
+    List<Booking> getAllByStatus(Status status);
 }

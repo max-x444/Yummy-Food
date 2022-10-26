@@ -18,10 +18,14 @@ import org.springframework.web.servlet.ModelAndView;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @RestController
 @RequestMapping("/api/booking")
 public class BookingController {
+    private static final Random RANDOM = new Random();
+    private static final int MAX_TIME = 3;
+    private static final int MIN_TIME = 1;
     private final BookingService bookingService;
     private final PageService<Booking> pageService;
 
@@ -39,6 +43,7 @@ public class BookingController {
             final Booking booking = optionalBooking.get();
             booking.setStatus(Status.ACCEPTED);
             booking.setCreated(LocalDateTime.now());
+            booking.setDishesPreparationTime(LocalDateTime.now().plusMinutes(RANDOM.nextInt(MAX_TIME) + MIN_TIME));
             booking.setTotalAmount(bookingService.getTotalAmount(booking.getUser().getId()));
             booking.setTotalPrice(bookingService.getTotalPrice(booking.getUser().getId()));
             bookingService.update(booking);
