@@ -45,11 +45,11 @@ public interface BookingRepository extends PagingAndSortingRepository<Booking, S
 
     @Query(value = """
             SELECT * FROM booking
-            WHERE NOT status = 'PENDING' AND UPPER(booking_id) LIKE UPPER(CONCAT('%', :filter, '%'))
+            WHERE NOT status = 'PENDING' AND (UPPER(booking_id) LIKE UPPER(CONCAT('%', :filter, '%'))
             OR UPPER(CAST(created AS varchar)) LIKE UPPER(CONCAT('%', :filter, '%'))
             OR UPPER(CAST(status AS varchar)) LIKE UPPER(CONCAT('%', :filter, '%'))
             OR UPPER(CAST(total_amount AS varchar)) LIKE UPPER(CONCAT('%', :filter, '%'))
             OR UPPER(CAST(total_price AS varchar)) LIKE UPPER(CONCAT('%', :filter, '%'))
-            OR UPPER(user_id) LIKE UPPER(CONCAT('%', :filter, '%'))""", nativeQuery = true)
+            OR UPPER(user_id) LIKE UPPER(CONCAT('%', :filter, '%')))""", nativeQuery = true)
     Page<Booking> findAllBySortedAndFiltered(@Param("filter") String filter, PageRequest pageRequest);
 }

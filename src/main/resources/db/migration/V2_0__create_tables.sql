@@ -8,9 +8,6 @@ create table if not exists dish_category
     unique
     );
 
-alter table dish_category
-    owner to postgres;
-
 create table if not exists dish
 (
     dish_id          varchar(255) not null
@@ -27,9 +24,6 @@ create table if not exists dish
     constraint fkdexet01io54i3kyi50oo9gip2
     references dish_category
     );
-
-alter table dish
-    owner to postgres;
 
 create table if not exists usr
 (
@@ -49,9 +43,6 @@ create table if not exists usr
     unique
     );
 
-alter table usr
-    owner to postgres;
-
 create table if not exists booking
 (
     booking_id              varchar(255) not null
@@ -66,9 +57,6 @@ create table if not exists booking
     references usr
     );
 
-alter table booking
-    owner to postgres;
-
 create table if not exists booking_dish
 (
     booking_dish_id varchar(255) not null
@@ -81,9 +69,6 @@ create table if not exists booking_dish
     constraint fk3wdq7dtlglhvgy82go5ct6qsm
     references dish
     );
-
-alter table booking_dish
-    owner to postgres;
 
 create table if not exists rating
 (
@@ -99,6 +84,3 @@ create table if not exists rating
     constraint fklgi9t6w691ggmgm5m5s5ebqjl
     references usr
     );
-
-alter table rating
-    owner to postgres;
