@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/category.css">
+    <link rel="stylesheet" href="/background.css">
 </head>
 
 <body>
@@ -238,9 +239,11 @@
     }
 
     function setValue(editButton) {
+        const tBody = editButton.parentNode.parentNode;
+        console.log(tBody.childNodes)
         document.getElementById("id").setAttribute('value', tBody.childNodes[3].textContent);
-        document.getElementById("name").setAttribute('value', tBody.childNodes[5].textContent);
-        document.getElementById("image").setAttribute('value', tBody.childNodes[7].textContent);
+        document.getElementById("image").setAttribute('value', tBody.childNodes[5].textContent);
+        document.getElementById("name").setAttribute('value', tBody.childNodes[7].textContent);
         setSizePage('updateSize')
     }
 
