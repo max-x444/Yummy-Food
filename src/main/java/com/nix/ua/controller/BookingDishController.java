@@ -5,7 +5,6 @@ import com.nix.ua.model.Dish;
 import com.nix.ua.model.User;
 import com.nix.ua.model.enums.Status;
 import com.nix.ua.service.BookingDishService;
-import com.nix.ua.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,12 +24,10 @@ import java.util.Optional;
 @RequestMapping("/api/booking-dish")
 public class BookingDishController {
     private final BookingDishService bookingDishService;
-    private final BookingService bookingService;
 
     @Autowired
-    public BookingDishController(BookingDishService bookingDishService, BookingService bookingService) {
+    public BookingDishController(BookingDishService bookingDishService) {
         this.bookingDishService = bookingDishService;
-        this.bookingService = bookingService;
     }
 
     @PutMapping("/update")
@@ -48,7 +45,7 @@ public class BookingDishController {
     @DeleteMapping("/delete/{id}")
     public ModelAndView delete(@AuthenticationPrincipal User user, @PathVariable String id, ModelAndView modelAndView) {
         bookingDishService.delete(id);
-        clearBookings(user.getUsername());
+        bookingDishService.clearBookings(user.getUsername());
         modelAndView.setViewName("redirect:/api/booking-dish/get-all");
         return modelAndView;
     }
@@ -60,7 +57,7 @@ public class BookingDishController {
         bookingDishes.stream()
                 .map(BookingDish::getId)
                 .forEach(bookingDishService::delete);
-        clearBookings(user.getUsername());
+        bookingDishService.clearBookings(user.getUsername());
         modelAndView.setViewName("redirect:/api/booking-dish/get-all");
         return modelAndView;
     }
@@ -80,13 +77,5 @@ public class BookingDishController {
         modelAndView.addObject("bookingDishes", bookingDishes);
         modelAndView.setViewName("basket/basket");
         return modelAndView;
-    }
-
-    private void clearBookings(String username) {
-        final List<BookingDish> pendingBookings =
-                bookingDishService.getAllByBookingStatusAndBookingUserUsername(Status.PENDING, username);
-        if (pendingBookings.isEmpty()) {
-            bookingService.clear(username);
-        }
     }
 }

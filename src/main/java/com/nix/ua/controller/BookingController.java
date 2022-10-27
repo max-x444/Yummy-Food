@@ -54,7 +54,7 @@ public class BookingController {
 
     @GetMapping("/get-all")
     public ModelAndView getAll(@AuthenticationPrincipal User user, ModelAndView modelAndView) {
-        final List<BookingDTO> bookings = bookingService.getAllAcceptedBookings(user.getId());
+        final List<BookingDTO> bookings = bookingService.getAllAcceptedBookingsByUserId(user.getId());
         modelAndView.addObject("bookings", bookings);
         modelAndView.setViewName("booking/booking");
         return modelAndView;
@@ -62,16 +62,15 @@ public class BookingController {
 
     @GetMapping("/get-all/admin")
     public ModelAndView getAll(@RequestParam("page") Optional<Integer> page, @RequestParam("size") Optional<Integer> size,
-                               ModelAndView modelAndView) {
-        return pageService.getPaginated(page, size, bookingService.getAllAcceptedAndReadyBookings(Status.PENDING),
-                "booking/bookingAdmin", modelAndView);
-    }
-
-    @GetMapping("/search")
-    public ModelAndView search(@RequestParam("page") Optional<Integer> page, @RequestParam("size") Optional<Integer> size,
-                               @RequestParam("filter") Optional<String> filter, ModelAndView modelAndView) {
-        filter.ifPresent(s -> modelAndView.addObject("filter", s));
-        return pageService.getPaginated(page, size, bookingService.search(Status.PENDING, filter),
-                "booking/bookingAdmin", modelAndView);
+                               @RequestParam("sort") Optional<String> sort, @RequestParam("filter") Optional<String> filter,
+                               @RequestParam("direction") Optional<Boolean> direction, ModelAndView modelAndView) {
+        final String pageSort = sort.orElse("total_price");
+        final String pageFilter = filter.orElse("");
+        final boolean pageDirection = direction.orElse(true);
+        modelAndView.addObject("sort", pageSort);
+        modelAndView.addObject("filter", pageFilter);
+        modelAndView.addObject("direction", pageDirection);
+        modelAndView.setViewName("booking/bookingAdmin");
+        return pageService.getPaginated(page, size, pageSort, pageFilter, pageDirection, modelAndView);
     }
 }

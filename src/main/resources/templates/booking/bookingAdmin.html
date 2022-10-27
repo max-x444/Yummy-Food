@@ -31,32 +31,78 @@
                         <form id="form" th:action="@{/api/booking/get-all/admin}" th:method="get">
                             <label style="width: 100%">
                                 Show
-                                <select onchange="checkOption()" name="size" class="form-select form-select-sm">
+                                <select id="selectedSize" onchange="checkSize()" name="size"
+                                        class="form-select form-select-sm">
                                     <option th:selected="${tPage.size == 5}" value="5">5</option>
                                     <option th:selected="${tPage.size == 10}" value="10">10</option>
                                     <option th:selected="${tPage.size == 15}" value="15">15</option>
                                 </select>
                                 entries
                             </label>
-                            <button hidden id="submit" type="submit"></button>
+                            <div hidden>
+                                <input id="sizeSort" name="sort">
+                                <input id="sizeFilter" name="filter">
+                                <input id="sizeDirection" name="direction">
+                            </div>
+                            <button hidden id="sizeSubmit" type="submit"></button>
                         </form>
                     </div>
                     <div class="col-sm-4 mt-3">
+                        <form id="formSort" th:action="@{/api/booking/get-all/admin}" th:method="get">
+                            <label style="width: 100%">
+                                Sort by
+                                <select id="selectedSort" onchange="checkSort()" name="sort"
+                                        class="form-select form-select-sm">
+                                    <option th:selected="${sort == 'booking_id'}" value="booking_id">Id</option>
+                                    <option th:selected="${sort == 'created'}" value="created">Created</option>
+                                    <option th:selected="${sort == 'total_price'}" value="total_price">Total Price</option>
+                                    <option th:selected="${sort == 'total_amount'}" value="total_amount">Total Amount</option>
+                                    <option th:selected="${sort == 'status'}" value="status">Status</option>
+                                    <option th:selected="${sort == 'user_id'}" value="user_id">User</option>
+                                </select>
+                            </label>
+                            <div hidden>
+                                <input id="sortSize" name="size">
+                                <input id="sortFilter" name="filter">
+                                <input id="sortDirection" name="direction">
+                            </div>
+                            <button hidden id="submitSort" type="submit"></button>
+                        </form>
+                        <form th:action="@{/api/booking/get-all/admin}" th:method="get">
+                            <div class="form-check">
+                                <input onclick="setTrueOrElse()" class="form-check-input" type="checkbox" id="directionButton" th:checked="${direction == true}">
+                                <label class="form-check-label" style="margin-top: 3px" for="directionButton">
+                                    From largest to smallest
+                                </label>
+                            </div>
+                            <div hidden>
+                                <input id="direction" name="direction" th:value="${direction}">
+                                <input id="directionSize" name="size">
+                                <input id="directionSort" name="sort">
+                                <input id="directionFilter" name="filter">
+                            </div>
+                            <button hidden id="submitDirection" type="submit"></button>
+                        </form>
                     </div>
                     <div class="col-sm-4 mt-1">
-                        <form id="formSearch" th:action="@{/api/booking/search}" th:method="get">
+                        <form id="formSearch" th:action="@{/api/booking/get-all/admin}" th:method="get">
+                            <input type="submit" onclick="checkFilter()" style="margin-right: 270px" class="btn site-btn btn-close-dark" value="Search:">
+                            <input id="filter" name="filter" th:value="${filter}" onkeyup="checkFilter()" style="width: 100%"
+                                   type="search" class="form-control form-control-sm">
                             <div hidden>
-                                <input id="size" name="size" th:value="${5}">
-                                <input id="filter" name="filter" th:value="${1}">
+                                <input id="filterSize" name="size">
+                                <input id="filterSort" name="sort">
+                                <input id="filterDirection" name="direction">
                             </div>
-                            <input type="submit" style="margin-right: 270px" class="btn site-btn btn-close-dark" value="Search:">
-                            <input id="searchValue" th:value="${filter}" onkeyup="searchTable()" style="width: 100%" type="search" class="form-control form-control-sm">
                         </form>
                         <form id="formClear" th:action="@{/api/booking/get-all/admin}" th:method="get">
+                            <input onclick="clearFilter()" type="submit" style="margin-right: 250px"
+                                   class="btn site-btn btn-close-dark" value="Clear filter">
                             <div hidden>
-                                <input id="sizeClear" name="size" th:value="${5}">
+                                <input id="clearSize" name="size">
+                                <input id="clearSort" name="sort">
+                                <input id="clearDirection" name="direction">
                             </div>
-                            <input onclick="clearFilter()" type="submit" style="margin-right: 250px" class="btn site-btn btn-close-dark" value="Clear filter">
                         </form>
                     </div>
                 </div>
@@ -111,7 +157,8 @@
                 <div class="pagination">
                     <li class="page-item">
                         <a th:if="${currentPage > 1}"
-                           th:href="@{/api/booking/search(size=${tPage.size}, page=${currentPage - 1}, filter=${filter})}"
+                           th:href="@{/api/booking/get-all/admin(size=${tPage.size}, page=${currentPage - 1},
+                            sort=${sort}, filter=${filter}, direction=${direction})}"
                            class="page-link">Previous</a>
                         <a th:if="${currentPage == 1}"
                            class="page-link">Previous</a>
@@ -119,13 +166,15 @@
                     <li class="page-item" th:if="${tPage.totalPages > 0}"
                         th:each="pageNumber : ${pageNumbers}"
                         th:class="${pageNumber==tPage.number + 1} ? active">
-                        <a th:href="@{/api/booking/search(size=${tPage.size}, page=${pageNumber}, filter=${filter})}"
+                        <a th:href="@{/api/booking/get-all/admin(size=${tPage.size}, page=${pageNumber}, sort=${sort},
+                         filter=${filter}, direction=${direction})}"
                            th:text="${pageNumber}" class="page-link">
                         </a>
                     </li>
                     <li class="page-item">
                         <a th:if="${currentPage != tPage.totalPages}"
-                           th:href="@{/api/booking/search(size=${tPage.size}, page=${currentPage + 1}, filter=${filter})}"
+                           th:href="@{/api/booking/get-all/admin(size=${tPage.size}, page=${currentPage + 1}, sort=${sort},
+                            filter=${filter}, direction=${direction})}"
                            class="page-link">Next</a>
                         <a th:if="${currentPage == tPage.totalPages}"
                            class="page-link">Next</a>
@@ -137,26 +186,44 @@
 </div>
 
 <script>
-    function checkOption() {
-        document.getElementById('submit').click();
+    function checkSize() {
+        document.getElementById('sizeSort').setAttribute('value', document.getElementById('selectedSort').value);
+        document.getElementById('sizeFilter').setAttribute('value', document.getElementById('filter').value);
+        document.getElementById('sizeDirection').setAttribute('value', document.getElementById('direction').value);
+        document.getElementById('sizeSubmit').click();
     }
 
-    function searchTable() {
-        const form = document.getElementById('form');
-        const optionValue = form.getElementsByTagName('select').item(0).value;
-        const formSearch = document.getElementById('formSearch');
-        const input = formSearch.getElementsByTagName('input');
-        const searchValue = input.item(3).value;
-        input.item(0).setAttribute('value', optionValue);
-        input.item(1).setAttribute('value', searchValue);
+    function checkSort() {
+        document.getElementById('sortSize').setAttribute('value', document.getElementById('selectedSize').value);
+        document.getElementById('sortFilter').setAttribute('value', document.getElementById('filter').value);
+        document.getElementById('sortDirection').setAttribute('value', document.getElementById('direction').value);
+        document.getElementById('submitSort').click();
     }
+
+    function setTrueOrElse() {
+        const direction = document.getElementById('direction');
+        document.getElementById('directionSize').setAttribute('value', document.getElementById('selectedSize').value);
+        document.getElementById('directionSort').setAttribute('value', document.getElementById('selectedSort').value);
+        document.getElementById('directionFilter').setAttribute('value', document.getElementById('filter').value);
+        if (document.getElementById('directionButton').checked) {
+            direction.setAttribute('value', Boolean(true).toString());
+        } else {
+            direction.setAttribute('value', Boolean(false).toString());
+        }
+        document.getElementById('submitDirection').click();
+    }
+
+    function checkFilter() {
+        document.getElementById('filterSize').setAttribute('value', document.getElementById('selectedSize').value);
+        document.getElementById('filterSort').setAttribute('value', document.getElementById('selectedSort').value);
+        document.getElementById('filterDirection').setAttribute('value', document.getElementById('direction').value);
+    }
+
 
     function clearFilter() {
-        const form = document.getElementById('form');
-        const optionValue = form.getElementsByTagName('select').item(0).value;
-        const formClear = document.getElementById('formClear');
-        const input = formClear.getElementsByTagName('input');
-        input.item(0).setAttribute('value', optionValue);
+        document.getElementById('clearSize').setAttribute('value', document.getElementById('selectedSize').value);
+        document.getElementById('clearSort').setAttribute('value', document.getElementById('selectedSort').value);
+        document.getElementById('clearDirection').setAttribute('value', document.getElementById('direction').value);
     }
 </script>
 

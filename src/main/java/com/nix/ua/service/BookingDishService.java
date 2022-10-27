@@ -15,11 +15,13 @@ import java.util.stream.Collectors;
 @Service
 public class BookingDishService extends MainService<BookingDish> {
     private final BookingDishRepository bookingDishRepository;
+    private final BookingService bookingService;
 
     @Autowired
-    private BookingDishService(BookingDishRepository bookingDishRepository) {
+    private BookingDishService(BookingDishRepository bookingDishRepository, BookingService bookingService) {
         super(bookingDishRepository);
         this.bookingDishRepository = bookingDishRepository;
+        this.bookingService = bookingService;
     }
 
     @Override
@@ -66,6 +68,13 @@ public class BookingDishService extends MainService<BookingDish> {
             final BookingDish updateBookingDish = filterBookingDishList.get(0);
             updateBookingDish.setAmount(updateBookingDish.getAmount() + amount);
             update(updateBookingDish);
+        }
+    }
+
+    public void clearBookings(String username) {
+        final List<BookingDish> pendingBookings = getAllByBookingStatusAndBookingUserUsername(Status.PENDING, username);
+        if (pendingBookings.isEmpty()) {
+            bookingService.clear(username);
         }
     }
 

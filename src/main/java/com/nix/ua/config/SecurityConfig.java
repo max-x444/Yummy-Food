@@ -1,6 +1,7 @@
 package com.nix.ua.config;
 
 import com.nix.ua.handler.URLAuthenticationSuccessHandler;
+import com.nix.ua.model.enums.Role;
 import com.nix.ua.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -31,8 +32,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/**", "/static/**").permitAll()
-//                .antMatchers("api/booking/get-all/admin").hasAuthority(Role.ADMIN.name())
+                .antMatchers("/*/*/get-all/admin/**").hasAuthority(Role.ADMIN.name())
+                .antMatchers("/api/booking-dish/get-all", "/api/booking/get-all", "/api/user/profile").authenticated()
+                .antMatchers("/static/**").permitAll()
                 .anyRequest().permitAll()
                 .and()
                 .formLogin()

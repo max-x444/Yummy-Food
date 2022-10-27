@@ -3,8 +3,10 @@ package com.nix.ua.repository;
 import com.nix.ua.dto.BookingDTO;
 import com.nix.ua.model.Booking;
 import com.nix.ua.model.enums.Status;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -12,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface BookingRepository extends CrudRepository<Booking, String> {
+public interface BookingRepository extends PagingAndSortingRepository<Booking, String> {
     Optional<Booking> findBookingByStatusAndUser_Username(Status status, String username);
 
     @Query(value = """
@@ -35,11 +37,19 @@ public interface BookingRepository extends CrudRepository<Booking, String> {
             JOIN Booking b ON bd.booking.id = b.id
             JOIN Dish d ON bd.dish.id = d.id
             WHERE b.user.id = :user_id AND (b.status = 'ACCEPTED' OR b.status = 'READY')""")
-    List<BookingDTO> getAllAcceptedBookings(@Param("user_id") String userId);
-
-    Iterable<Booking> getAllByStatusNot(Status status);
+    List<BookingDTO> getAllAcceptedBookingsByUserId(@Param("user_id") String userId);
 
     List<Booking> getAllByStatusAndUser_Username(Status status, String username);
 
     List<Booking> getAllByStatus(Status status);
+
+    @Query(value = """
+            SELECT * FROM booking
+            WHERE NOT status = 'PENDING' AND UPPER(booking_id) LIKE UPPER(CONCAT('%', :filter, '%'))
+            OR UPPER(CAST(created AS varchar)) LIKE UPPER(CONCAT('%', :filter, '%'))
+            OR UPPER(CAST(status AS varchar)) LIKE UPPER(CONCAT('%', :filter, '%'))
+            OR UPPER(CAST(total_amount AS varchar)) LIKE UPPER(CONCAT('%', :filter, '%'))
+            OR UPPER(CAST(total_price AS varchar)) LIKE UPPER(CONCAT('%', :filter, '%'))
+            OR UPPER(user_id) LIKE UPPER(CONCAT('%', :filter, '%'))""", nativeQuery = true)
+    Page<Booking> findAllBySortedAndFiltered(@Param("filter") String filter, PageRequest pageRequest);
 }

@@ -74,6 +74,7 @@ public class DishController {
     @GetMapping("/get-all/admin")
     public ModelAndView getAllDishByCategoryName(@RequestParam("page") Optional<Integer> page,
                                                  @RequestParam("size") Optional<Integer> size, ModelAndView modelAndView) {
-        return pageService.getPaginated(page, size, dishService.getAll(), "dish/dishAdmin", modelAndView);
+        modelAndView.setViewName("dish/dishAdmin");
+        return pageService.getPaginated(page, size, dishService.getAll(), modelAndView);
     }
 }

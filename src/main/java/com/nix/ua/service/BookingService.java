@@ -5,16 +5,16 @@ import com.nix.ua.model.Booking;
 import com.nix.ua.model.enums.Status;
 import com.nix.ua.repository.BookingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.repository.query.Param;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 @EnableScheduling
@@ -74,51 +74,16 @@ public class BookingService extends MainService<Booking> {
         return bookingRepository.getAllByStatusAndUser_Username(status, username);
     }
 
-    public List<BookingDTO> getAllAcceptedBookings(String userId) {
-        return bookingRepository.getAllAcceptedBookings(userId);
-    }
-
-    public Iterable<Booking> getAllAcceptedAndReadyBookings(Status status) {
-        return bookingRepository.getAllByStatusNot(status);
+    public List<BookingDTO> getAllAcceptedBookingsByUserId(String userId) {
+        return bookingRepository.getAllAcceptedBookingsByUserId(userId);
     }
 
     public List<Booking> getAllByStatus(Status status) {
         return bookingRepository.getAllByStatus(status);
     }
 
-    public Iterable<Booking> search(Status status, Optional<String> stringOptional) {
-        final List<Booking> collect = StreamSupport.stream(bookingRepository.getAllByStatusNot(status).spliterator(), false)
-                .collect(Collectors.toList());
-        final List<Booking> filteredList = new ArrayList<>();
-        if (stringOptional.isPresent()) {
-            final String filter = stringOptional.get();
-            for (Booking booking : collect) {
-                if (booking.getStatus().name().contains(filter)) {
-                    filteredList.add(booking);
-                    continue;
-                }
-                if (booking.getUser().getId().contains(filter)) {
-                    filteredList.add(booking);
-                    continue;
-                }
-                if (booking.getCreated().toString().contains(filter)) {
-                    filteredList.add(booking);
-                    continue;
-                }
-                if (booking.getId().contains(filter)) {
-                    filteredList.add(booking);
-                    continue;
-                }
-                if (String.valueOf(booking.getTotalAmount()).contains(filter)) {
-                    filteredList.add(booking);
-                    continue;
-                }
-                if (String.valueOf(booking.getTotalPrice()).contains(filter)) {
-                    filteredList.add(booking);
-                }
-            }
-        }
-        return filteredList;
+    public Page<Booking> findAllBySortedAndFiltered(@Param("filter") String filter, PageRequest pageRequest) {
+        return bookingRepository.findAllBySortedAndFiltered(filter, pageRequest);
     }
 
     public void clear(String username) {
