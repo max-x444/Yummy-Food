@@ -7,7 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <title>YummyFood</title>
-    <link rel="stylesheet" href="/background.css">
+    <link rel="stylesheet" href="/css/background.css">
 </head>
 
 <body>
@@ -15,7 +15,7 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
             <a class="navbar-brand" th:href="@{/api/home}">
-                <img th:src="@{/logo.png}" width="30" height="30"
+                <img th:src="@{/images/logo.png}" width="30" height="30"
                      class="d-inline-block align-top" alt="">
                 YummyFood
             </a>
@@ -47,9 +47,9 @@
                 <ul class="navbar-nav ">
                     <li class="nav-item">
                         <a sec:authorize="isAuthenticated()" class="nav-link" th:href="@{/api/booking-dish/get-all}">
-                            <img th:src="@{/basket.png}" alt="" width="30" height="30"></a>
+                            <img th:src="@{/images/basket.png}" alt="" width="30" height="30"></a>
                         <a sec:authorize="!isAuthenticated()" type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                            <img th:src="@{/basket.png}" alt="" width="30" height="30"></a>
+                            <img th:src="@{/images/basket.png}" alt="" width="30" height="30"></a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle text-black" role="button"
