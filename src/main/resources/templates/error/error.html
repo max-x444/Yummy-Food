@@ -1,0 +1,59 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <title>YummyFood</title>
+    <link rel="stylesheet" href="/css/error.css">
+</head>
+
+<body>
+<div class="text">
+    <div th:if="${dispatcherType == null}">ERROR</div>
+    <h1 th:if="${status == null}">404</h1>
+    <div th:if="${dispatcherType != null}" th:text="${dispatcherType}">ERROR</div>
+    <h1 th:if="${status != null}" th:text="${status}">404</h1>
+    <hr>
+    <div th:if="${reasonPhrase == null}">Page Not Found</div>
+    <div th:if="${reasonPhrase != null}" th:text="|Page ${reasonPhrase}|">Page Not Found</div>
+    <a type="button" style="color: white" class="btn btn-close-dark mt-1" th:href="@{/api/home}">
+        Go To home
+    </a>
+</div>
+
+<div class="astronaut">
+    <img th:src="@{/images/astronaut.png}" alt="" class="src">
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const body = document.body;
+        setInterval(createStar, 100);
+
+        function createStar() {
+            let right = Math.random() * 500;
+            const top = Math.random() * screen.height;
+            const star = document.createElement("div");
+            star.classList.add("star")
+            body.appendChild(star);
+            setInterval(runStar, 10);
+            star.style.top = top + "px";
+
+            function runStar() {
+                if (right >= screen.width) {
+                    star.remove();
+                }
+                right += 3;
+                star.style.right = right + "px";
+            }
+        }
+    })
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+        crossorigin="anonymous"></script>
+</body>
+</html>

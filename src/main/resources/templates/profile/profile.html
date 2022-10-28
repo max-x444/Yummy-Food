@@ -17,7 +17,7 @@
                 <div class="d-flex flex-column align-items-center text-center mt-5">
                     <img class="rounded-circle" style="max-width: 150px" th:src="${profile.avatar}">
                     <div class="form-group">
-                        <input type="file" name="file" class="form-control-file">
+                        <input type="file" name="file" accept="image/png, image/jpg, image/jpeg" class="form-control-file">
                     </div>
                     <span class="font-weight-bold" th:text="${profile.name}"></span>
                     <span class="text-black-50" th:text="${profile.email}"></span>
