@@ -54,9 +54,7 @@ public class BookingDishController {
     public ModelAndView clear(@AuthenticationPrincipal User user, ModelAndView modelAndView) {
         final List<BookingDish> bookingDishes =
                 bookingDishService.getAllByBookingStatusAndBookingUserUsername(Status.PENDING, user.getUsername());
-        bookingDishes.stream()
-                .map(BookingDish::getId)
-                .forEach(bookingDishService::delete);
+        bookingDishService.deleteAll(bookingDishes);
         bookingDishService.clearBookings(user.getUsername());
         modelAndView.setViewName("redirect:/api/booking-dish/get-all");
         return modelAndView;

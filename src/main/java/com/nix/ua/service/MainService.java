@@ -1,16 +1,12 @@
 package com.nix.ua.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-@Service
 public abstract class MainService<T> {
     private final CrudRepository<T, String> crudRepository;
 
-    @Autowired
     protected MainService(CrudRepository<T, String> crudRepository) {
         this.crudRepository = crudRepository;
     }
@@ -31,5 +27,9 @@ public abstract class MainService<T> {
         if (crudRepository.existsById(id)) {
             crudRepository.deleteById(id);
         }
+    }
+
+    public void deleteAll(Iterable<T> items) {
+        crudRepository.deleteAll(items);
     }
 }

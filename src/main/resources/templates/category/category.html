@@ -10,7 +10,7 @@
 <div class="row mx-auto mt-5 ms-5 me-5 mb-5">
     <div class="col-sm-2" th:each="dishCategory : ${dishCategories}">
         <a class="card mt-5" style="text-decoration: none; color: black"
-           th:href="@{/api/dish/get-all/{name}(name=${dishCategory.name.toLowerCase()})}">
+           th:href="@{/api/dish/get-all/{id}(id=${dishCategory.id})}">
             <img th:src="${dishCategory.image}" class="card-img-top" alt="" style="height: auto; width: auto;">
             <div class="card-body">
                 <h5 class="card-title text-center" th:text="${dishCategory.name}"></h5>

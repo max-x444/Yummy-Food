@@ -37,7 +37,6 @@ public class URLAuthenticationSuccessHandler implements AuthenticationSuccessHan
 
     private void handle(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         final String targetUrl = determineTargetUrl(authentication, request);
-
         if (!response.isCommitted()) {
             redirectStrategy.sendRedirect(request, response, targetUrl);
         } else {

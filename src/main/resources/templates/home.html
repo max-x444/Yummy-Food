@@ -30,17 +30,17 @@
                         <a class="nav-link text-black" th:href="@{/api/dish-category/get-all}">Menu</a>
                     </li>
                     <li class="nav-item">
-                        <a sec:authorize="isAuthenticated()" class="nav-link text-black" th:href="@{/api/booking/get-all}">Orders</a>
+                        <a sec:authorize="isAuthenticated()" class="nav-link text-black" th:href="@{/api/booking/get-all}">My Orders</a>
                         <a sec:authorize="!isAuthenticated()" type="button" class="nav-link text-black" data-bs-toggle="modal" data-bs-target="#exampleModal">Orders</a>
                     </li>
                     <li class="nav-item ">
-                        <a sec:authorize="hasAuthority('ADMIN')" class="nav-link text-black" th:href="@{/api/dish-category/get-all/admin}">Category</a>
+                        <a sec:authorize="hasAuthority('ADMIN')" class="nav-link text-black" th:href="@{/api/dish-category/get-all/admin}">Manage Categories</a>
                     </li>
                     <li class="nav-item ">
-                        <a sec:authorize="hasAuthority('ADMIN')" class="nav-link text-black" th:href="@{/api/dish/get-all/admin}">Products</a>
+                        <a sec:authorize="hasAuthority('ADMIN')" class="nav-link text-black" th:href="@{/api/dish/get-all/admin}">Manage Products</a>
                     </li>
                     <li class="nav-item ">
-                        <a sec:authorize="hasAuthority('ADMIN')" class="nav-link text-black" th:href="@{/api/booking/get-all/admin}">Order</a>
+                        <a sec:authorize="hasAuthority('ADMIN')" class="nav-link text-black" th:href="@{/api/booking/get-all/admin}">All Orders</a>
                     </li>
                     <li class="nav-item ">
                         <a class="nav-link text-black" th:href="@{/api/home/error/404}">404</a>
@@ -55,16 +55,16 @@
                         <a sec:authorize="!isAuthenticated()" type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#exampleModal">
                             <img th:src="@{/images/basket.png}" alt="" width="30" height="30"></a>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-black" role="button"
-                           data-bs-toggle="dropdown" aria-expanded="false">
-                            Language
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <li><a class="dropdown-item" href="#">UA</a></li>
-                            <li><a class="dropdown-item" href="#">EN</a></li>
-                        </ul>
-                    </li>
+<!--                    <li class="nav-item dropdown">-->
+<!--                        <a class="nav-link dropdown-toggle text-black" role="button"-->
+<!--                           data-bs-toggle="dropdown" aria-expanded="false">-->
+<!--                            Language-->
+<!--                        </a>-->
+<!--                        <ul class="dropdown-menu dropdown-menu" aria-labelledby="navbarDropdownMenuLink">-->
+<!--                            <li><a class="dropdown-item" href="#">UA</a></li>-->
+<!--                            <li><a class="dropdown-item" href="#">EN</a></li>-->
+<!--                        </ul>-->
+<!--                    </li>-->
                     <li class="nav-item">
                         <div sec:authorize="!isAuthenticated()">
                             <button type="button" class="btn btn-close-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">
@@ -117,20 +117,20 @@
                                                                 </div>
 
                                                                 <!-- 2 column grid layout -->
-                                                                <div class="row mb-4">
-                                                                    <div class="col-md-6 d-flex justify-content-center">
-                                                                        <!-- Checkbox -->
-                                                                        <div class="form-check mb-3 mb-md-0">
-                                                                            <input class="form-check-input" type="checkbox" value="" id="loginCheck" checked/>
-                                                                            <label class="form-check-label" for="loginCheck"> Remember me </label>
-                                                                        </div>
-                                                                    </div>
+<!--                                                                <div class="row mb-4">-->
+<!--                                                                    <div class="col-md-6 d-flex justify-content-center">-->
+<!--                                                                        &lt;!&ndash; Checkbox &ndash;&gt;-->
+<!--                                                                        <div class="form-check mb-3 mb-md-0">-->
+<!--                                                                            <input class="form-check-input" type="checkbox" value="" id="loginCheck" checked/>-->
+<!--                                                                            <label class="form-check-label" for="loginCheck"> Remember me </label>-->
+<!--                                                                        </div>-->
+<!--                                                                    </div>-->
 
-                                                                    <div class="col-md-6 d-flex justify-content-center">
-                                                                        <!-- Simple link -->
-                                                                        <a href="#!">Forgot password?</a>
-                                                                    </div>
-                                                                </div>
+<!--                                                                    <div class="col-md-6 d-flex justify-content-center">-->
+<!--                                                                        &lt;!&ndash; Simple link &ndash;&gt;-->
+<!--                                                                        <a href="#!">Forgot password?</a>-->
+<!--                                                                    </div>-->
+<!--                                                                </div>-->
 
                                                                 <!-- Submit button -->
                                                                 <div class="row">
@@ -171,10 +171,10 @@
                                                                 </div>
 
                                                                 <!-- Repeat Password input -->
-                                                                <div class="form-outline mb-4">
-                                                                    <input type="password" id="registerRepeatPassword" class="form-control" required/>
-                                                                    <label class="form-label" for="registerRepeatPassword">Repeat password</label>
-                                                                </div>
+<!--                                                                <div class="form-outline mb-4">-->
+<!--                                                                    <input type="password" id="registerRepeatPassword" class="form-control" required/>-->
+<!--                                                                    <label class="form-label" for="registerRepeatPassword">Repeat password</label>-->
+<!--                                                                </div>-->
 
                                                                 <div class="row">
                                                                     <div class="col-md-6">

@@ -19,17 +19,17 @@ public interface BookingRepository extends PagingAndSortingRepository<Booking, S
 
     @Query(value = """
             SELECT SUM(amount) FROM booking_dish
-            FULL JOIN booking USING(booking_id)
-            FULL JOIN dish USING(dish_id)
+            JOIN booking USING(booking_id)
+            JOIN dish USING(dish_id)
             WHERE user_id = :user_id AND status = 'PENDING'""", nativeQuery = true)
     int getTotalAmount(@Param("user_id") String userId);
 
     @Query(value = """
             SELECT SUM(price * amount) FROM booking_dish
-            FULL JOIN booking USING(booking_id)
-            FULL JOIN dish USING(dish_id)
+            JOIN booking USING(booking_id)
+            JOIN dish USING(dish_id)
             WHERE user_id = :user_id AND status = 'PENDING'""", nativeQuery = true)
-    Double getTotalPrice(@Param("user_id") String userId);
+    double getTotalPrice(@Param("user_id") String userId);
 
     @Query(value = """
             SELECT new com.nix.ua.dto.BookingDTO(d.image, b.id, b.created, b.dishesPreparationTime,

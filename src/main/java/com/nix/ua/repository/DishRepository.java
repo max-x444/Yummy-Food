@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DishRepository extends CrudRepository<Dish, String> {
-    Iterable<Dish> getAllByDishCategory_Name(String name);
+    Iterable<Dish> getAllByDishCategory_Id(String id);
 }

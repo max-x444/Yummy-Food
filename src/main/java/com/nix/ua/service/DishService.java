@@ -46,7 +46,7 @@ public class DishService extends MainService<Dish> {
         }
     }
 
-    public Iterable<Dish> getAllDishByCategoryName(String name) {
-        return dishRepository.getAllByDishCategory_Name(name.substring(0, 1).toUpperCase() + name.substring(1));
+    public Iterable<Dish> getAllDishByCategoryId(String id) {
+        return dishRepository.getAllByDishCategory_Id(id);
     }
 }

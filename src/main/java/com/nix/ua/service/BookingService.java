@@ -87,10 +87,8 @@ public class BookingService extends MainService<Booking> {
     }
 
     public void clear(String username) {
-        getAllByStatusAndUserUsername(Status.PENDING, username)
-                .stream()
-                .map(Booking::getId)
-                .forEach(this::delete);
+        final List<Booking> pendingBookings = getAllByStatusAndUserUsername(Status.PENDING, username);
+        bookingRepository.deleteAll(pendingBookings);
     }
 
     @Scheduled(fixedRate = ONE_MINUTE)

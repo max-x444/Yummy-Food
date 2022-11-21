@@ -63,17 +63,17 @@ public class DishController {
         return modelAndView;
     }
 
-    @GetMapping("/get-all/{name}")
-    public ModelAndView getAllDishByCategoryName(@PathVariable("name") String name, ModelAndView modelAndView) {
-        final Iterable<Dish> dishes = dishService.getAllDishByCategoryName(name);
+    @GetMapping("/get-all/{id}")
+    public ModelAndView getAllDishByCategoryId(@PathVariable("id") String id, ModelAndView modelAndView) {
+        final Iterable<Dish> dishes = dishService.getAllDishByCategoryId(id);
         modelAndView.addObject("dishes", dishes);
         modelAndView.setViewName("dish/dish");
         return modelAndView;
     }
 
     @GetMapping("/get-all/admin")
-    public ModelAndView getAllDishByCategoryName(@RequestParam("page") Optional<Integer> page,
-                                                 @RequestParam("size") Optional<Integer> size, ModelAndView modelAndView) {
+    public ModelAndView getAllDish(@RequestParam("page") Optional<Integer> page,
+                                   @RequestParam("size") Optional<Integer> size, ModelAndView modelAndView) {
         modelAndView.setViewName("dish/dishAdmin");
         return pageService.getPaginated(page, size, dishService.getAll(), modelAndView);
     }
